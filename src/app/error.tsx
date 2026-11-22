@@ -1,0 +1,1 @@
+"use client";export default function ErrorPage({reset}:{reset:()=>void}){return <main id="main" className="center-message"><h1>Ruang belum berhasil dimuat.</h1><p>Periksa layanan lokal, lalu coba kembali.</p><button onClick={reset}>Coba lagi</button></main>}
