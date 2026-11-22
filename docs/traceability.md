@@ -1,5 +1,9 @@
 # Traceability PRD → proyek
 
+## Pembaruan Phase 2
+Tabel audit awal di bawah adalah baseline Phase 0, bukan status implementasi terbaru. Detail implementasi, batas scope, path dan bukti tes sekarang ada di phase-2-status.md.
+ST-05/06/08, ENG-01, BR-20, NFR-06/07/12: implementasi demo/schema tersedia; persetujuan ahli dan full pilot acceptance belum terpenuhi. PL-01/ST-01: perbaikan reauthentication mode anak tersedia. Tidak ada requirement produk yang dinyatakan fully released hanya dari demo.
+
 Audit awal: workspace kosong. Semua requirement belum diimplementasikan. Bukti sumber adalah docs/NUMERIQ_PRD_MVP_v1.0.md; tidak ada bukti path implementasi. Estimasi merupakan rentang fase bersama, bukan effort aditif per baris. Acceptance asli tetap mengikat.
 
 | Requirement ID | Requirement / skenario | Sudah tersedia? | Bukti path implementasi | Gap | Risiko | Estimasi / fase | Prioritas |
