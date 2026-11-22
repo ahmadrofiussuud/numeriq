@@ -23,7 +23,11 @@ create table public.item_scoring_versions (
 );
 create function public.protect_content_version() returns trigger language plpgsql set search_path=public,pg_temp as $$
 begin
- if old.status in('reviewed','published') then raise exception 'Reviewed content is immutable; create a new reviewed version for publication'; end if;
+ if old.status='published' then raise exception 'Published content is immutable; create a new version';end if;
+ if old.status='reviewed' then
+  if tg_op='DELETE' then raise exception 'Reviewed content is immutable';end if;
+  if new.status<>'published' or (to_jsonb(new)-'status') is distinct from (to_jsonb(old)-'status') then raise exception 'Only publication of unchanged reviewed content is allowed';end if;
+ end if;
  if tg_op='UPDATE' and (new.module_id<>old.module_id or new.version<>old.version) then raise exception 'Create a new row for a new version';end if;
  if tg_op='DELETE' then return old;end if;
  return new;

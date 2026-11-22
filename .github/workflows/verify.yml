@@ -23,4 +23,17 @@ jobs:
           path: |
             package-lock.json
             test-results/
+  database:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --no-save supabase
+      - run: npx supabase start
+      - run: npx supabase db reset
+      - run: node scripts/test-integration.mjs
+      - run: npx supabase stop
+        if: always()
 

@@ -1,5 +1,5 @@
-# NUMERIQ — Phase 1 foundation
-Local-only, synthetic data. UI and backend foundation source exists; Next build and Supabase integration are NOT VERIFIED in this environment.
+# NUMERIQ — Phase 2 learning foundation
+Local-only, synthetic data. Next typecheck/build passed in GitHub Actions. Four activity components and 12 draft modules are available at /demo/activities. Database and final browser results are tracked in docs/phase-2-status.md.
 
 ## Prerequisites
 Node 24.11.1 / npm 11.6.4 detected. npm registry DNS failed (ENOTFOUND). Docker was not found on PATH or at the standard Docker Desktop CLI path.
@@ -25,7 +25,7 @@ npm.cmd test — pure authorization domain tests, runs without dependencies.
 npm.cmd run typecheck — requires installed dependencies.
 npm.cmd run build — requires installed dependencies.
 Integration/RLS/browser checks must be performed after local setup. Passing domain tests is NOT proof of SQL policies or runtime UI.
-No real assessment content, scoring, BKT, billing, or clinical claims are implemented.
+No real assessment scoring, BKT, billing, or clinical claims are implemented. Phase 2 fixtures are synthetic and NEEDS_REVIEW; they do not store learner responses.
 
 ## Demo flow
 Parent sign-in -> inspect Nara -> grant draft demo consent -> open child session -> child shell -> return to adult.
@@ -34,7 +34,12 @@ Teacher -> only assigned school-A children. Teacher-B -> school-B only.
 Admin -> aggregate school data, no response-level learner access.
 Try another role URL -> forbidden. Without login -> login. Without backend config -> login disabled with explanation.
 
-## Remaining Phase 1 gates
-Build/typecheck, actual Supabase migration and API tests, negative RLS tests, browser/accessibility verification; adult registration/recovery and robust login rate limiting; protected adult re-entry from child mode (currently supervised shared device); production secure-cookie config; multi-membership. Draft consent requires expert/legal review before real use.
-See docs/phase-1-status.md. Do not advance to Phase 2 or claim pilot readiness.
+## Current verification and remaining gates
+Phase 2 was authorized by PM. Child-mode return now requires adult password; child-mode cookies also block adult routes and actions. Typecheck/build passed on GitHub Actions; local dependency installation is still blocked by terminal DNS.
+Remaining: actual Supabase migration/API tests, full authenticated browser flow, screen-reader review, adult registration/recovery, robust application rate limits, production cookie policy and multi-membership. Draft consent requires review before real use.
+See docs/phase-2-status.md for current status; docs/phase-1-status.md is the earlier checkpoint. No pilot readiness claim.
+
+## Repository
+https://github.com/ahmadrofiussuud/numeriq — work branch codex/phase-2-learning, draft PR #1. No deployment configured.
+Terminal Git DNS fails in the current sandbox, so source was synchronized through the connected GitHub API. Local origin is configured, but remote history has not been fetched. Once Git connectivity works, clone the work branch into a new directory to obtain the canonical commit history; do not force-push an unrelated local history.
 
