@@ -45,7 +45,7 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  await page.getByRole("radio",{name:"5",exact:true}).check();
  await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
  await expect(page.getByRole("heading",{name:"Terima kasih sudah mencoba!"})).toBeVisible();
- await page.goto("/teacher/assessments");
+ await page.evaluate(()=>window.location.assign("/teacher/assessments"));
  await expect(page).toHaveURL(/\/student$/);
  await page.getByText("Kembali ke ruang pendamping",{exact:true}).click();
  await page.getByLabel("Kata sandi pendamping").fill(process.env.NUMERIQ_DEMO_PASSWORD!);
