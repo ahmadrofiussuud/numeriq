@@ -13,7 +13,8 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  await expect(reportLink).toBeVisible();
  const reportPath=await reportLink.getAttribute("href");
  const sessionId=reportPath!.split("/").pop();
- await page.goto("/teacher");
+ await page.evaluate(()=>window.location.assign("/teacher"));
+ await expect(page).toHaveURL(/\/teacher$/);
  await page.locator(".child-card").filter({hasText:"Nara Demo"}).getByRole("button",{name:"Buka ruang anak"}).click();
  await expect(page).toHaveURL(/\/student$/);
  await page.goto("/student/assessments/"+sessionId);

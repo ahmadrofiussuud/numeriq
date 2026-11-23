@@ -11,7 +11,7 @@ export async function api(path:string, token?:string, body?:unknown) {
  const config=configuration();
  if(!config) throw new Error("Supabase lokal belum dikonfigurasi.");
  const response=await fetch(config.url+path,{method:body===undefined?"GET":"POST",headers:{apikey:config.key,Authorization:"Bearer "+(token||config.key),"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body),cache:"no-store"});
- if(!response.ok) throw new Error("Permintaan ditolak. Periksa akses, persetujuan, atau layanan lokal.");
+ if(!response.ok) { console.warn("NUMERIQ backend rejected request", {status:response.status,endpoint:path.split("?")[0]}); throw new Error("Permintaan ditolak. Periksa akses, persetujuan, atau layanan lokal."); }
  if(response.status===204) return null;
  const text=await response.text();
  return text ? JSON.parse(text) : null;
