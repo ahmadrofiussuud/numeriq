@@ -31,6 +31,7 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
    lost=true;const accepted=await route.fetch();expect(accepted.ok()).toBeTruthy();await route.abort("failed");
   }else await route.continue();
  });
+ console.log("P4 diagnosis Phase3 browser URL",page.url(),"headings",await page.getByRole("heading").allTextContents(),"alerts",await page.getByRole("alert").allTextContents());
  await page.getByRole("radio",{name:"3",exact:true}).check();
  await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
  await expect(page.getByRole("button",{name:"Kirim ulang jawaban"})).toBeVisible();
