@@ -156,7 +156,7 @@ alter table public.remediation_mappings enable row level security;
 alter table public.learning_observations enable row level security;
 alter table public.teacher_reviews enable row level security;
 revoke all on public.model_parameters,public.item_error_mappings,public.remediation_mappings,public.learning_observations,public.teacher_reviews from anon,authenticated;
-revoke execute on function public.bkt_step(double precision,double precision,double precision,double precision,boolean),public.record_learning_observation(),public.learning_insights(uuid),public.submit_teacher_review(uuid,text,text,integer,text,text,text,uuid) from public,anon;
+revoke execute on function public.bkt_step(double precision,double precision,double precision,double precision,boolean),public.record_learning_observation(),public.learning_insights(uuid),public.submit_teacher_review(uuid,text,text,integer,text,text,text,uuid) from public,anon,authenticated;
 revoke execute on function public.record_learning_observation() from authenticated;
 grant execute on function public.learning_insights(uuid),public.submit_teacher_review(uuid,text,text,integer,text,text,text,uuid) to authenticated;
 
