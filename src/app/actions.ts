@@ -6,10 +6,11 @@ import {isUuid} from "../domain/assessment";
 export async function assignAssessment(form:FormData){
  await checkOrigin();await requireAdultMode();const current=await actor();
  if(!current||current.role!=="teacher")redirect("/forbidden");
- const student=String(form.get("student")),key=String(form.get("assignmentKey"));
- if(!isUuid(student)||!isUuid(key))redirect("/teacher/assessments?error=1");
- try{await rpc("assign_assessment",current.token,{p_student:student,p_set:"numeracy-demo",p_version:1,p_key:key});}catch{redirect("/teacher/assessments?error=1");}
- redirect("/teacher/assessments");
+ const student=String(form.get("student")),key=String(form.get("assignmentKey")),set=String(form.get("set")||"numeracy-demo");
+ if(!isUuid(student)||!isUuid(key)||!["numeracy-demo","pattern-demo"].includes(set))redirect("/teacher/assessments?error=1");
+ let assigned:string;
+ try{assigned=await rpc("assign_assessment",current.token,{p_student:student,p_set:set,p_version:1,p_key:key});}catch{redirect("/teacher/assessments?error=1");}
+ redirect("/teacher/assessments?assigned="+encodeURIComponent(assigned));
 }
 async function checkOrigin() {
  const origin=(await headers()).get("origin");
@@ -76,3 +77,19 @@ export async function endChild(form:FormData) {
  redirect("/"+current.role);
 }
 
+
+export async function reviewEvidence(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();
+ if(!current||current.role!=="teacher")redirect("/forbidden");
+ const student=String(form.get("student")||""),key=String(form.get("reviewKey")||"");
+ const kc=String(form.get("kc")||""),code=String(form.get("code")||""),rule=Number(form.get("rule"));
+ const decision=String(form.get("decision")||""),reason=String(form.get("reason")||"").trim();
+ const corrected=decision==="corrected"?String(form.get("corrected")||"").trim():null;
+ if(!isUuid(student)||!isUuid(key)||!["reviewed","rejected","corrected"].includes(decision)
+    ||!Number.isSafeInteger(rule)||rule<1||kc.length>100||code.length>80||reason.length<10||reason.length>500
+    ||(corrected!==null&&(corrected.length<2||corrected.length>80||corrected===code)))
+    redirect("/teacher/insights/"+encodeURIComponent(student)+"?error=1");
+ try{await rpc("submit_teacher_review",current.token,{p_student:student,p_kc:kc,p_code:code,p_rule:rule,p_decision:decision,p_reason:reason,p_corrected:corrected,p_key:key});}
+ catch{redirect("/teacher/insights/"+student+"?error=1");}
+ redirect("/teacher/insights/"+student+"?updated=1");
+}
