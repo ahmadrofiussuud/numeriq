@@ -7,11 +7,12 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  await expect(page).toHaveURL(/\/teacher$/);
  await page.getByRole("link",{name:"Asesmen",exact:false}).click();
  const panel=page.locator("article.panel").filter({has:page.getByRole("heading",{name:"Nara Demo"})});
+ const existing=await panel.locator('a[href^="/teacher/assessments/"]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute("href")));
  await panel.getByRole("button",{name:"Tugaskan paket demo"}).click();
  await expect(page).toHaveURL(/\/teacher\/assessments$/);
- const reportLink=panel.locator('a[href^="/teacher/assessments/"]').first();
- await expect(reportLink).toBeVisible();
- const reportPath=await reportLink.getAttribute("href");
+ await expect.poll(async()=>panel.locator('a[href^="/teacher/assessments/"]').count()).toBeGreaterThan(existing.length);
+ const links=await panel.locator('a[href^="/teacher/assessments/"]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute("href")));
+ const reportPath=links.find(link=>!existing.includes(link));expect(reportPath).toBeTruthy();
  const sessionId=reportPath!.split("/").pop();
  await page.evaluate(()=>window.location.assign("/teacher"));
  await expect(page).toHaveURL(/\/teacher$/);
@@ -31,7 +32,6 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
    lost=true;const accepted=await route.fetch();expect(accepted.ok()).toBeTruthy();await route.abort("failed");
   }else await route.continue();
  });
- console.log("P4 diagnosis Phase3 browser URL",page.url(),"headings",await page.getByRole("heading").allTextContents(),"alerts",await page.getByRole("alert").allTextContents());
  await page.getByRole("radio",{name:"3",exact:true}).check();
  await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
  await expect(page.getByRole("button",{name:"Kirim ulang jawaban"})).toBeVisible();
