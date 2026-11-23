@@ -23,6 +23,8 @@ test("two synthetic items reveal provisional pattern; teacher can reject without
  await page.getByRole("radio",{name:"6",exact:true}).check();
  await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
  await expect(page.getByRole("heading",{name:"Terima kasih sudah mencoba!"})).toBeVisible();
+ await page.goto("/teacher/assessments");
+ await expect(page).toHaveURL(/\/student$/);
  await page.getByText("Kembali ke ruang pendamping",{exact:true}).click();
  await page.getByLabel("Kata sandi pendamping").fill(process.env.NUMERIQ_DEMO_PASSWORD!);
  await page.getByRole("button",{name:"Verifikasi dan kembali"}).click();
