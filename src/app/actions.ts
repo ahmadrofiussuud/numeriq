@@ -23,7 +23,7 @@ export async function signIn(form:FormData) {
  let auth;
  try { auth=await api("/auth/v1/token?grant_type=password",undefined,{email:String(form.get("email")||"").trim(),password:String(form.get("password")||"")}); }
  catch { redirect("/login?error=1"); }
- (await cookies()).set("numeriq_access",auth.access_token,{httpOnly:true,sameSite:"lax",secure:false,path:"/",maxAge:Math.min(auth.expires_in||3600,3600)});
+ (await cookies()).set("numeriq_access",auth.access_token,{httpOnly:true,sameSite:"strict",secure:false,path:"/",maxAge:Math.min(auth.expires_in||3600,3600)});
  (await cookies()).delete("numeriq_child");
  (await cookies()).delete("numeriq_child_lock");
  const current=await actor();
@@ -59,8 +59,8 @@ export async function startChild(form:FormData) {
  let session;
  try { session=await rpc("start_child_session",current.token,{p_student:String(form.get("student"))}); }
  catch { redirect("/"+current.role+"?blocked=1"); }
- (await cookies()).set("numeriq_child",session,{httpOnly:true,sameSite:"lax",secure:false,path:"/",maxAge:900});
- (await cookies()).set("numeriq_child_lock","1",{httpOnly:true,sameSite:"lax",secure:false,path:"/",maxAge:3600});
+ (await cookies()).set("numeriq_child",session,{httpOnly:true,sameSite:"strict",secure:false,path:"/",maxAge:900});
+ (await cookies()).set("numeriq_child_lock","1",{httpOnly:true,sameSite:"strict",secure:false,path:"/",maxAge:3600});
  redirect("/student");
 }
 export async function endChild(form:FormData) {
@@ -72,7 +72,7 @@ export async function endChild(form:FormData) {
  const jar=await cookies();const token=jar.get("numeriq_child")?.value;
  if(token) await rpc("end_child_session",current.token,{p_token:token});
  jar.delete("numeriq_child");jar.delete("numeriq_child_lock");
- jar.set("numeriq_access",verified.access_token,{httpOnly:true,sameSite:"lax",secure:false,path:"/",maxAge:3600});
+ jar.set("numeriq_access",verified.access_token,{httpOnly:true,sameSite:"strict",secure:false,path:"/",maxAge:3600});
  redirect("/"+current.role);
 }
 
