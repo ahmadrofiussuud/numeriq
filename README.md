@@ -54,3 +54,14 @@ Setelah setup Supabase lokal dan seed akun sesuai instruksi di atas: wali login 
 `npx supabase db reset` menghapus data lokal dan memuat seed sintetis, termasuk konfigurasi khusus yang mengizinkan konten NEEDS_REVIEW. Jangan gunakan seed ini untuk siswa nyata. Migration sendiri menonaktifkan konten sintetis secara default.
 
 Verifikasi tambahan: `node scripts/test-integration.mjs` pada Supabase lokal bersih; `RUN_AUTH_BROWSER=1 node scripts/test-integration.mjs` menjalankan perjalanan browser terautentikasi setelah build dan pemasangan Chromium. Skrip menyiapkan akun sintetis dan mengubah data lokal; gunakan instance uji. Hasil aktual dicatat pada [docs/phase-3-status.md](docs/phase-3-status.md).
+
+
+## Phase 4 — learning evidence sintetis
+
+Branch `codex/phase-4-learning-engine` menambahkan taxonomy kesalahan berversi, snapshot BKT per respons, state bukti, timeline mastery, dan review guru yang append-only. Draft PR #3 bertumpu pada Phase 3 (#2). Tidak ada deployment dan tidak ada klaim diagnosis.
+
+Paket `pattern-demo` menyediakan bukti sintetis untuk menguji ambang minimal dua item berbeda. Satu jawaban salah tetap berstatus `insufficient_evidence`; pola baru dapat diajukan untuk review setelah muncul pada dua item berbeda. Respons yang memakai hint dicatat tetapi sementara dikecualikan dari evidence dan pembaruan BKT. Semua mapping, parameter, dan rubrik demo tetap `NEEDS_REVIEW` sampai disahkan ahli.
+
+Verifikasi aktual pada 23 November 2026: 39 unit/reference-math tests, 9 browser activity tests, typecheck, production build, 52 integration/RLS checks, dan 2 authenticated browser journeys lulus pada [GitHub Actions run 45185668733](https://github.com/ahmadrofiussuud/numeriq/actions/runs/45185668733). Detail sumber, batas keamanan, dan hasil pengujian tersedia di [docs/phase-4-status.md](docs/phase-4-status.md).
+
+Phase 4 berhenti pada engine dan alur review sintetis. Sebelum pilot nyata, ahli perlu mengesahkan taxonomy/remediation, priors BKT, aturan hint, serta kebijakan evidence window; legal/privacy juga perlu menyetujui consent dan retensi.
