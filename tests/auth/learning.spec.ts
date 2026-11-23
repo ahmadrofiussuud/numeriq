@@ -8,14 +8,11 @@ test("two synthetic items reveal provisional pattern; teacher can reject without
  await page.goto("/teacher/assessments");
  await expect(page.getByRole("heading",{name:"Asesmen numerasi"})).toBeVisible();
  const panel=page.locator("article.panel").filter({has:page.getByRole("heading",{name:"Nara Demo"})});
- const existing=await panel.locator('a[href^="/teacher/assessments/"]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute("href")));
  await panel.getByLabel("Paket sintetis").selectOption("pattern-demo");
  await panel.getByRole("button",{name:"Tugaskan paket demo"}).click();
- await expect(page).toHaveURL(/\/teacher\/assessments$/);
- await expect.poll(async()=>panel.locator('a[href^="/teacher/assessments/"]').count()).toBeGreaterThan(existing.length);
- const links=await panel.locator('a[href^="/teacher/assessments/"]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute("href")));
- const reportPath=links.find(link=>!existing.includes(link));expect(reportPath).toBeTruthy();
- const sessionId=reportPath!.split("/").pop();
+ await expect(page).toHaveURL(/\/teacher\/assessments\?assigned=/);
+ const sessionId=new URL(page.url()).searchParams.get("assigned");expect(sessionId).toMatch(/^[a-f0-9-]{36}$/);
+ const reportPath="/teacher/assessments/"+sessionId;
  await page.goto("/teacher");
  await page.locator(".child-card").filter({hasText:"Nara Demo"}).getByRole("button",{name:"Buka ruang anak"}).click();
  await page.goto("/student/assessments/"+sessionId);
