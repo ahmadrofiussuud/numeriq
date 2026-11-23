@@ -26,6 +26,7 @@ test("two synthetic items reveal provisional pattern; teacher can reject without
  await page.getByText("Kembali ke ruang pendamping",{exact:true}).click();
  await page.getByLabel("Kata sandi pendamping").fill(process.env.NUMERIQ_DEMO_PASSWORD!);
  await page.getByRole("button",{name:"Verifikasi dan kembali"}).click();
+ await expect(page).toHaveURL(/\/teacher$/);
  await page.goto(reportPath!);
  await expect(page.locator("article.panel")).toHaveCount(2);
  await expect(page.locator("article.panel").first()).toContainText("PLACE_VALUE_COMPOSE");
