@@ -1,0 +1,17 @@
+import {test,expect} from "@playwright/test";
+test.describe("touch activity",()=>{
+ test.use({hasTouch:true,viewport:{width:390,height:844}});
+ test("ten frame responds to touch",async({page})=>{
+  await page.goto("/demo/activities/NS-01");
+  await page.getByRole("button",{name:"Kotak 1, kosong",exact:true}).tap();
+  await expect(page.getByRole("button",{name:"Kotak 1, berisi titik",exact:true})).toHaveAttribute("aria-pressed","true");
+ });
+});
+test("12 draft modules and invalid route",async({page})=>{await page.goto("/demo/activities");await expect(page.locator(".module-card")).toHaveCount(12);const r=await page.goto("/demo/activities/missing");expect(r?.status()).toBe(404);});
+test("ten frame keyboard toggle reset and honest feedback",async({page})=>{await page.goto("/demo/activities/NS-01");await page.getByRole("button",{name:"Kotak 1, kosong",exact:true}).focus();await page.keyboard.press("Space");await expect(page.getByRole("button",{name:"Kotak 1, berisi titik",exact:true})).toHaveAttribute("aria-pressed","true");await page.getByRole("button",{name:"Selesai mencoba"}).click();await expect(page.getByRole("status")).toContainText("belum dinilai");await page.getByRole("button",{name:"Mulai ulang"}).click();await expect(page.getByRole("button",{name:"Kotak 1, kosong",exact:true})).toHaveAttribute("aria-pressed","false");});
+test("number line keyboard and limits",async({page})=>{await page.goto("/demo/activities/NS-04");await page.getByRole("slider").focus();await page.keyboard.press("ArrowRight");await expect(page.getByRole("slider")).toHaveValue("1");await page.keyboard.press("End");await expect(page.getByRole("slider")).toHaveValue("10");await expect(page.getByRole("button",{name:"Maju 1"})).toBeDisabled();});
+test("blocks preserve value",async({page})=>{await page.goto("/demo/activities/AR-04");await page.getByRole("button",{name:"1 puluhan → 10 satuan",exact:true}).click();await expect(page.locator(".activity-count")).toContainText("12");await page.getByRole("button",{name:"10 satuan → 1 puluhan",exact:true}).click();await expect(page.locator(".activity-count")).toContainText("12");});
+test("choice keyboard",async({page})=>{await page.goto("/demo/activities/NS-03");await page.getByRole("radio").first().focus();await page.keyboard.press("ArrowRight");await expect(page.getByRole("radio").nth(1)).toBeChecked();});
+for(const width of [390,1366])test("responsive "+width,async({page})=>{await page.setViewportSize({width,height:900});for(const route of ["/","/login","/demo/activities","/demo/activities/PV-01"]){await page.goto(route);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);}await page.screenshot({path:"test-results/activities-"+width+".png",fullPage:true});});
+test("adult route requires authentication",async({page})=>{await page.goto("/teacher");await expect(page).toHaveURL(/login/);await expect(page.getByRole("button",{name:"Masuk",exact:false})).toBeDisabled();});
+
