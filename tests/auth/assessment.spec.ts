@@ -49,7 +49,11 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  console.log("Before adult route", (await page.context().cookies()).map(c=>({name:c.name,expires:c.expires}))); 
  const teacherProbe=await page.request.get("/teacher/assessments",{maxRedirects:0});
  const studentProbe=await page.request.get("/student",{maxRedirects:0});
- console.log("Probe",teacherProbe.status(),teacherProbe.headers()["location"],studentProbe.status(),studentProbe.headers()["location"]);
+ console.log("Probe",teacherProbe.status(),teacherProbe.headers()["location"],studentProbe.status(),studentProbe.headers()["location"],(await teacherProbe.text()).slice(0,120));
+ const cookies=await page.context().cookies();
+ const sessionCookie=cookies.find(c=>c.name==="numeriq_access");
+ const auth=await page.request.get(process.env.SUPABASE_URL+"/auth/v1/user",{headers:{apikey:process.env.SUPABASE_ANON_KEY!,Authorization:"Bearer "+sessionCookie?.value}});
+ console.log("Auth and cookie attributes",auth.status(),cookies.map(c=>({name:c.name,domain:c.domain,path:c.path,sameSite:c.sameSite})));
  await page.evaluate(()=>window.location.assign("/teacher/assessments"));
  console.log("After adult route", (await page.context().cookies()).map(c=>({name:c.name,expires:c.expires})));
  await expect(page).toHaveURL(/\/student$/);
