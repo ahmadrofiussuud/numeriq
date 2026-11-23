@@ -131,3 +131,6 @@ alter table public.assessment_responses enable row level security;
 revoke all on public.assessment_config,public.assessment_sets,public.assessment_items,public.assessment_sessions,public.assessment_session_items,public.assessment_responses from anon,authenticated;
 revoke execute on function public.assign_assessment(uuid,text,integer,uuid),public.guard_assessment(uuid,text),public.list_assessments(uuid,text),public.read_assessment(uuid,text),public.assessment_hint(uuid,text,text),public.submit_assessment_response(uuid,text,uuid,text,integer,text),public.assessment_report(uuid) from public,anon;
 grant execute on function public.assign_assessment(uuid,text,integer,uuid),public.list_assessments(uuid,text),public.read_assessment(uuid,text),public.assessment_hint(uuid,text,text),public.submit_assessment_response(uuid,text,uuid,text,integer,text),public.assessment_report(uuid) to authenticated;
+
+-- Internal helpers must not inherit Supabase's authenticated default privileges.
+revoke execute on function public.guard_assessment(uuid,text),public.reject_assessment_change() from public,anon,authenticated;

@@ -17,8 +17,23 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  await page.locator(".child-card").filter({hasText:"Nara Demo"}).getByRole("button",{name:"Buka ruang anak"}).click();
  await expect(page).toHaveURL(/\/student$/);
  await page.goto("/student/assessments/"+sessionId);
+ // Reject forged scoring fields and cross-origin writes before accepting a response.
+ const endpoint="/api/assessments/"+sessionId;
+ const forged=await page.request.post(endpoint,{headers:{origin:"http://127.0.0.1:3000"},data:{correct:true}});
+ expect(forged.status()).toBe(400);
+ const crossOrigin=await page.request.post(endpoint,{headers:{origin:"https://invalid.example"},data:{}});
+ expect(crossOrigin.status()).toBe(403);
+ // Server accepts the response, but the browser loses its acknowledgment.
+ let lost=false;
+ await page.route("**"+endpoint,async route=>{
+  if(route.request().method()==="POST"&&!lost){
+   lost=true;const accepted=await route.fetch();expect(accepted.ok()).toBeTruthy();await route.abort("failed");
+  }else await route.continue();
+ });
  await page.getByRole("radio",{name:"3",exact:true}).check();
  await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
+ await expect(page.getByRole("button",{name:"Kirim ulang jawaban"})).toBeVisible();
+ await page.getByRole("button",{name:"Kirim ulang jawaban"}).click();
  await expect(page.getByText("1/3 tersimpan")).toBeVisible();
  await page.reload();
  await expect(page.getByText("1/3 tersimpan")).toBeVisible();

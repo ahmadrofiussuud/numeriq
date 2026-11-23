@@ -15,6 +15,7 @@ export async function runAssessmentChecks({rpc,request,check,parent,teacher,othe
  await check("P3 repeated assignment key returns same session",async()=>assert.equal((await rpc("assign_assessment",teacher,args)).data,id));
  const token=(await rpc("start_child_session",teacher,{p_student:nara})).data;
  const base={p_session:id,p_token:token};const response=randomUUID();
+ await check("P3 internal session helper cannot be called directly",async()=>assert.equal((await rpc("guard_assessment",teacher,base)).ok,false));
  const first={...base,p_response:response,p_item:"DEMO-01",p_version:1,p_answer:"three"};
  await check("P3 read pins version and hides keys",async()=>{const r=await rpc("read_assessment",teacher,base);assert.equal(r.ok,true,JSON.stringify(r.data));assert.equal(r.data.item.version,1);assert.equal(r.data.answered,0);assert.equal(JSON.stringify(r.data).includes("correct_option"),false);});
  await check("P3 wrong child token denied",async()=>assert.equal((await rpc("read_assessment",teacher,{...base,p_token:"invalid"})).ok,false));

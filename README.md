@@ -44,3 +44,13 @@ See docs/phase-2-status.md for current status; docs/phase-1-status.md is the ear
 https://github.com/ahmadrofiussuud/numeriq — work branch codex/phase-2-learning, draft PR #1. No deployment configured.
 Terminal Git DNS fails in the current sandbox, so source was synchronized through the connected GitHub API. Local origin is configured, but remote history has not been fetched. Once Git connectivity works, clone the work branch into a new directory to obtain the canonical commit history; do not force-push an unrelated local history.
 
+
+## Phase 3 — asesmen sintetis
+
+Branch `codex/phase-3-assessments` menambahkan penugasan guru, sesi anak, jawaban immutable dengan versi soal, penilaian server, petunjuk, resume dan laporan respons. Draft PR #2 bertumpu pada Phase 2 (#1). Tidak ada deployment atau BKT.
+
+Setelah setup Supabase lokal dan seed akun sesuai instruksi di atas: wali login dan memberikan persetujuan demo untuk Nara; guru membuka **Asesmen**, menugaskan paket demo, lalu membuka ruang anak dari dashboard. Pilih tugas, jawab tiga soal, dan kembali ke pendamping dengan verifikasi kata sandi untuk melihat laporan.
+
+`npx supabase db reset` menghapus data lokal dan memuat seed sintetis, termasuk konfigurasi khusus yang mengizinkan konten NEEDS_REVIEW. Jangan gunakan seed ini untuk siswa nyata. Migration sendiri menonaktifkan konten sintetis secara default.
+
+Verifikasi tambahan: `node scripts/test-integration.mjs` pada Supabase lokal bersih; `RUN_AUTH_BROWSER=1 node scripts/test-integration.mjs` menjalankan perjalanan browser terautentikasi setelah build dan pemasangan Chromium. Skrip menyiapkan akun sintetis dan mengubah data lokal; gunakan instance uji. Hasil aktual dicatat pada [docs/phase-3-status.md](docs/phase-3-status.md).
