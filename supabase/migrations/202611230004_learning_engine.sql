@@ -159,3 +159,14 @@ revoke all on public.model_parameters,public.item_error_mappings,public.remediat
 revoke execute on function public.bkt_step(double precision,double precision,double precision,double precision,boolean),public.record_learning_observation(),public.learning_insights(uuid),public.submit_teacher_review(uuid,text,text,integer,text,text,text,uuid) from public,anon;
 revoke execute on function public.record_learning_observation() from authenticated;
 grant execute on function public.learning_insights(uuid),public.submit_teacher_review(uuid,text,text,integer,text,text,text,uuid) to authenticated;
+
+-- Existing teacher report now includes the server-derived rule evidence.
+create or replace function public.assessment_report(p_session uuid) returns jsonb language plpgsql stable security definer set search_path=public,pg_temp as $$
+declare sess assessment_sessions; tenant uuid;
+begin
+ select * into sess from assessment_sessions where id=p_session;
+ select institution_id into tenant from students where id=sess.student_id;
+ if sess.id is null or not can_read_child(sess.student_id) or sess.institution_id is distinct from tenant or not exists(select 1 from profiles where id=auth.uid() and role='teacher' and active) then raise exception 'Forbidden';end if;
+ return jsonb_build_object('id',sess.id,'student_id',sess.student_id,'status',sess.status,'set_version',sess.set_version,'responses',coalesce((select jsonb_agg(jsonb_build_object('response_id',r.id,'item_id',r.item_id,'item_version',r.item_version,'kc_id',i.kc_id,'prompt',i.prompt,'answer',r.answer,'correct',r.correct,'hint_used',r.hint_used,'error_code',o.error_code,'rule_version',o.rule_version,'sequence',r.sequence,'created_at',r.created_at) order by r.sequence) from assessment_responses r join assessment_session_items si on si.session_id=r.session_id and si.item_id=r.item_id join assessment_items i on i.set_id=si.set_id and i.set_version=si.set_version and i.item_id=si.item_id and i.item_version=si.item_version left join learning_observations o on o.response_id=r.id where r.session_id=p_session),'[]'::jsonb));
+end;$$;
+
