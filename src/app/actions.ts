@@ -8,8 +8,9 @@ export async function assignAssessment(form:FormData){
  if(!current||current.role!=="teacher")redirect("/forbidden");
  const student=String(form.get("student")),key=String(form.get("assignmentKey")),set=String(form.get("set")||"numeracy-demo");
  if(!isUuid(student)||!isUuid(key)||!["numeracy-demo","pattern-demo"].includes(set))redirect("/teacher/assessments?error=1");
- try{await rpc("assign_assessment",current.token,{p_student:student,p_set:set,p_version:1,p_key:key});}catch{redirect("/teacher/assessments?error=1");}
- redirect("/teacher/assessments");
+ let assigned:string;
+ try{assigned=await rpc("assign_assessment",current.token,{p_student:student,p_set:set,p_version:1,p_key:key});}catch{redirect("/teacher/assessments?error=1");}
+ redirect("/teacher/assessments?assigned="+encodeURIComponent(assigned));
 }
 async function checkOrigin() {
  const origin=(await headers()).get("origin");
