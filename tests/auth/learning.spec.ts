@@ -15,9 +15,8 @@ test("two synthetic items reveal provisional pattern; teacher can reject without
  const reportPath="/teacher/assessments/"+sessionId;
  await page.goto("/teacher");
  await page.locator(".child-card").filter({hasText:"Nara Demo"}).getByRole("button",{name:"Buka ruang anak"}).click();
+ await expect(page).toHaveURL(/\/student$/);
  await page.goto("/student/assessments/"+sessionId);
- const view=await page.request.get("/api/assessments/"+sessionId);
- console.log("New pattern session",sessionId,"HTTP",view.status(),"item",(await view.json()).item?.id);
  await page.getByRole("radio",{name:"5",exact:true}).check();
  await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
  await expect(page.getByText("1/2 tersimpan")).toBeVisible();
