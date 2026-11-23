@@ -36,7 +36,8 @@ Try another role URL -> forbidden. Without login -> login. Without backend confi
 
 ## Current verification and remaining gates
 Phase 2 was authorized by PM. Child-mode return now requires adult password; child-mode cookies also block adult routes and actions. Typecheck/build passed on GitHub Actions; local dependency installation is still blocked by terminal DNS.
-Remaining: actual Supabase migration/API tests, full authenticated browser flow, screen-reader review, adult registration/recovery, robust application rate limits, production cookie policy and multi-membership. Draft consent requires review before real use.
+Verified on 23 November 2026: 27 domain tests, 9 Chromium tests, typecheck, build, both database migrations and 12 real Supabase RPC/RLS checks pass in CI run 45117329074. Local terminal DNS/runtime limitations remain.
+Remaining: full authenticated browser flow, visual/screen-reader review, adult registration/recovery, robust application rate limits, production cookie policy and multi-membership. Draft consent requires review before real use. Generated package-lock.json is available in the CI artifact but not yet committed.
 See docs/phase-2-status.md for current status; docs/phase-1-status.md is the earlier checkpoint. No pilot readiness claim.
 
 ## Repository
