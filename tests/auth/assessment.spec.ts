@@ -54,6 +54,11 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  const sessionCookie=cookies.find(c=>c.name==="numeriq_access");
  const auth=await page.request.get(process.env.SUPABASE_URL+"/auth/v1/user",{headers:{apikey:process.env.SUPABASE_ANON_KEY!,Authorization:"Bearer "+sessionCookie?.value}});
  console.log("Auth and cookie attributes",auth.status(),cookies.map(c=>({name:c.name,domain:c.domain,path:c.path,sameSite:c.sameSite})));
+ const explicit=await page.request.get("/student",{maxRedirects:0,headers:{Cookie:cookies.map(c=>c.name+"="+c.value).join("; ")}});
+ const profile=await page.request.get(process.env.SUPABASE_URL+"/rest/v1/profiles?select=id,active,role",{headers:{apikey:process.env.SUPABASE_ANON_KEY!,Authorization:"Bearer "+sessionCookie?.value}});
+ console.log("Explicit cookie student / profile",explicit.status(),explicit.headers()["location"],profile.status(),(await profile.json()).length);
+ const routeCookieNames:string[]=[];
+ page.on("request",async request=>{if(request.isNavigationRequest()&&request.url().startsWith("http://127.0.0.1:3000/")){const h=await request.allHeaders();routeCookieNames.push(request.url().split(":3000")[1]+":"+(h.cookie||"").split(";").map(v=>v.trim().split("=")[0]).join(","));console.log("Nav cookie names",routeCookieNames.at(-1));}});
  await page.evaluate(()=>window.location.assign("/teacher/assessments"));
  console.log("After adult route", (await page.context().cookies()).map(c=>({name:c.name,expires:c.expires})));
  await expect(page).toHaveURL(/\/student$/);
