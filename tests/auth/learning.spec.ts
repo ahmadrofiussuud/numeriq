@@ -5,6 +5,7 @@ test("two synthetic items reveal provisional pattern; teacher can reject without
  await page.getByLabel("Kata sandi",{exact:true}).fill(process.env.NUMERIQ_DEMO_PASSWORD!);
  await page.getByRole("button",{name:"Masuk",exact:false}).click();
  await page.goto("/teacher/assessments");
+ console.log("P4 diagnosis Phase4 teacher URL",page.url(),"headings",await page.getByRole("heading").allTextContents(),"alerts",await page.getByRole("alert").allTextContents());
  const panel=page.locator("article.panel").filter({has:page.getByRole("heading",{name:"Nara Demo"})});
  await panel.getByLabel("Paket sintetis").selectOption("pattern-demo");
  await panel.getByRole("button",{name:"Tugaskan paket demo"}).click();
