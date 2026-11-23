@@ -19,8 +19,8 @@ Audit awal: workspace kosong. Semua requirement belum diimplementasikan. Bukti s
 | SA-09 | Ekspor agregat | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 1/5/6 (12–18 / 12–18 / 10–15 hari) | P1 |
 | TC-01 | Dashboard assignment dan review | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | TC-02 | Student Detail dan longitudinal history | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
-| TC-03 | Buat assignment asesmen | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
-| TC-04 | Lihat respons dan hasil per item | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
+| TC-03 | Buat assignment asesmen | Teruji Phase 3 | PR #2, CI #45176321161 | Verifikasi pilot Phase 7 | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
+| TC-04 | Lihat respons dan hasil per item | Parsial Phase 3 | PR #2, CI #45176321161 | Error code dan interpretasi Phase 4 | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | TC-05 | Lihat mastery KC | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | TC-06 | Lihat suspected error/evidence | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | TC-07 | Review/approve/reject/edit classification | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
@@ -30,8 +30,8 @@ Audit awal: workspace kosong. Semua requirement belum diimplementasikan. Bukti s
 | TC-11 | Catatan observasi pedagogis | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P1 |
 | ST-01 | Masuk melalui akses yang dikelola sekolah/wali | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | ST-02 | Lihat tugas sesuai entitlement | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
-| ST-03 | Kerjakan asesmen | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
-| ST-04 | Simpan/resume sesi dengan aman | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
+| ST-03 | Kerjakan asesmen | Teruji Phase 3 | PR #2, CI #45176321161 | Verifikasi pilot Phase 7 | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
+| ST-04 | Simpan/resume sesi dengan aman | Teruji Phase 3 | PR #2, CI #45176321161 | Verifikasi pilot Phase 7 | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | ST-05 | Belajar melalui 12 micro-module | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | ST-06 | Umpan balik suportif | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
 | ST-07 | Lihat progres aktivitas | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–5 (lihat implementation-plan) | P0 |
@@ -58,7 +58,7 @@ Audit awal: workspace kosong. Semua requirement belum diimplementasikan. Bukti s
 | PL-09 | Feature flags/config | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | 1/5/6 (12–18 / 12–18 / 10–15 hari) | P1 |
 | PL-10 | Internal support console minimal | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | 1/5/6 (12–18 / 12–18 / 10–15 hari) | P0 |
 | ENG-01 | Versioned item bank (KC, difficulty, distractor error code) | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–4 (10–15 / 10–15 / 12–18 hari) | P0 |
-| ENG-02 | Assessment/session state machine | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–4 (10–15 / 10–15 / 12–18 hari) | P0 |
+| ENG-02 | Assessment/session state machine | Teruji Phase 3 | PR #2, CI #45176321161 | Verifikasi pilot Phase 7 | Sedang–tinggi: alur produk/learning | 2–4 (10–15 / 10–15 / 12–18 hari) | P0 |
 | ENG-03 | Error classification by deterministic rule | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–4 (10–15 / 10–15 / 12–18 hari) | P0 |
 | ENG-04 | Evidence counter and optional probe | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–4 (10–15 / 10–15 / 12–18 hari) | P0 |
 | ENG-05 | BKT per knowledge component | Belum | — | Implementasi dan verifikasi acceptance | Sedang–tinggi: alur produk/learning | 2–4 (10–15 / 10–15 / 12–18 hari) | P0 |
@@ -113,17 +113,17 @@ Audit awal: workspace kosong. Semua requirement belum diimplementasikan. Bukti s
 | AT-03 | Anak belum memiliki consent berlaku | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-04 | Orang tua berupaya menautkan anak bukan miliknya | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-05 | Guru sekolah A mencoba buka siswa sekolah B | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
-| AT-06 | Response POST dikirim dua kali | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
+| AT-06 | Response POST dikirim dua kali | Teruji Phase 3 | PR #2, CI #45176321161 | Verifikasi pilot Phase 7 | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-07 | Satu jawaban salah dengan distractor berlabel | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-08 | BKT diberi rangkaian jawaban referensi | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-09 | Guru menolak classification | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
-| AT-10 | Item direvisi setelah siswa menjawab | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
+| AT-10 | Item direvisi setelah siswa menjawab | Teruji Phase 3 | PR #2, CI #45176321161 | Verifikasi pilot Phase 7 | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-11 | Child menyelesaikan salah satu 12 modul | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-12 | Payment webhook sama diputar ulang | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-13 | Pembayaran Home gagal | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-14 | Expired school license tanpa Home | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-15 | Admin sekolah mengubah user lain yang tidak berwenang | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
-| AT-16 | Sesi asesmen terputus dan dilanjutkan | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
+| AT-16 | Sesi asesmen terputus dan dilanjutkan | Teruji Phase 3 | PR #2, CI #45176321161 | Verifikasi pilot Phase 7 | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-17 | Uji keyboard, touch, screen-reader pada tugas utama | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 | AT-18 | Parent menarik consent | Belum | — | Implementasi dan verifikasi acceptance | Tinggi: kontrol akses/integritas sesuai requirement | Lintas fase; QA 7 (12–20 hari) | Wajib sesuai PRD |
 

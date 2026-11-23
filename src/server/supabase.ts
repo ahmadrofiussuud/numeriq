@@ -17,9 +17,8 @@ export async function api(path:string, token?:string, body?:unknown) {
  return text ? JSON.parse(text) : null;
 }
 export async function actor() {
- if(!configuration()) return null;
  const token=(await cookies()).get("numeriq_access")?.value;
- if(!token) return null;
+ if(!configuration() || !token) return null;
  try {
  const user=await api("/auth/v1/user",token);
  const rows=await api("/rest/v1/profiles?id=eq."+encodeURIComponent(user.id)+"&select=id,role,display_name,institution_id,active",token);

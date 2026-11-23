@@ -2,6 +2,15 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { api, actor, rpc } from "../server/supabase";
+import {isUuid} from "../domain/assessment";
+export async function assignAssessment(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();
+ if(!current||current.role!=="teacher")redirect("/forbidden");
+ const student=String(form.get("student")),key=String(form.get("assignmentKey"));
+ if(!isUuid(student)||!isUuid(key))redirect("/teacher/assessments?error=1");
+ try{await rpc("assign_assessment",current.token,{p_student:student,p_set:"numeracy-demo",p_version:1,p_key:key});}catch{redirect("/teacher/assessments?error=1");}
+ redirect("/teacher/assessments");
+}
 async function checkOrigin() {
  const origin=(await headers()).get("origin");
  if(origin!==(process.env.APP_ORIGIN||"http://127.0.0.1:3000")) throw new Error("Origin tidak diizinkan.");

@@ -1,0 +1,59 @@
+import {test,expect} from "@playwright/test";
+test("teacher assigns; supervised learner submits, resumes and completes; teacher reads evidence",async({page})=>{
+ await page.goto("/login");
+ await page.getByLabel("Email",{exact:true}).fill("guru@numeriq.test");
+ await page.getByLabel("Kata sandi",{exact:true}).fill(process.env.NUMERIQ_DEMO_PASSWORD!);
+ await page.getByRole("button",{name:"Masuk",exact:false}).click();
+ await expect(page).toHaveURL(/\/teacher$/);
+ await page.getByRole("link",{name:"Asesmen",exact:false}).click();
+ const panel=page.locator("article.panel").filter({has:page.getByRole("heading",{name:"Nara Demo"})});
+ await panel.getByRole("button",{name:"Tugaskan paket demo"}).click();
+ await expect(page).toHaveURL(/\/teacher\/assessments$/);
+ const reportLink=panel.locator('a[href^="/teacher/assessments/"]').first();
+ await expect(reportLink).toBeVisible();
+ const reportPath=await reportLink.getAttribute("href");
+ const sessionId=reportPath!.split("/").pop();
+ await page.evaluate(()=>window.location.assign("/teacher"));
+ await expect(page).toHaveURL(/\/teacher$/);
+ await page.locator(".child-card").filter({hasText:"Nara Demo"}).getByRole("button",{name:"Buka ruang anak"}).click();
+ await expect(page).toHaveURL(/\/student$/);
+ await page.goto("/student/assessments/"+sessionId);
+ // Reject forged scoring fields and cross-origin writes before accepting a response.
+ const endpoint="/api/assessments/"+sessionId;
+ const forged=await page.request.post(endpoint,{headers:{origin:"http://127.0.0.1:3000"},data:{correct:true}});
+ expect(forged.status()).toBe(400);
+ const crossOrigin=await page.request.post(endpoint,{headers:{origin:"https://invalid.example"},data:{}});
+ expect(crossOrigin.status()).toBe(403);
+ // Server accepts the response, but the browser loses its acknowledgment.
+ let lost=false;
+ await page.route("**"+endpoint,async route=>{
+  if(route.request().method()==="POST"&&!lost){
+   lost=true;const accepted=await route.fetch();expect(accepted.ok()).toBeTruthy();await route.abort("failed");
+  }else await route.continue();
+ });
+ await page.getByRole("radio",{name:"3",exact:true}).check();
+ await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
+ await expect(page.getByRole("button",{name:"Kirim ulang jawaban"})).toBeVisible();
+ await page.getByRole("button",{name:"Kirim ulang jawaban"}).click();
+ await expect(page.getByText("1/3 tersimpan")).toBeVisible();
+ await page.reload();
+ await expect(page.getByText("1/3 tersimpan")).toBeVisible();
+ await page.getByRole("button",{name:"Lihat petunjuk"}).click();
+ await expect(page.getByRole("status")).toContainText("Satu puluhan");
+ await page.getByRole("radio",{name:"23",exact:true}).check();
+ await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
+ await expect(page.getByText("2/3 tersimpan")).toBeVisible();
+ await page.getByRole("radio",{name:"5",exact:true}).check();
+ await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
+ await expect(page.getByRole("heading",{name:"Terima kasih sudah mencoba!"})).toBeVisible();
+ await page.goto("/teacher/assessments");
+ await expect(page).toHaveURL(/\/student$/);
+ await page.getByText("Kembali ke ruang pendamping",{exact:true}).click();
+ await page.getByLabel("Kata sandi pendamping").fill(process.env.NUMERIQ_DEMO_PASSWORD!);
+ await page.getByRole("button",{name:"Verifikasi dan kembali"}).click();
+ await expect(page).toHaveURL(/\/teacher$/);
+ await page.goto(reportPath!);
+ await expect(page.getByRole("heading",{name:"Respons asesmen"})).toBeVisible();
+ await expect(page.locator("article.panel")).toHaveCount(3);
+ await expect(page.locator("article.panel").nth(1)).toContainText("Menggunakan petunjuk");
+});
