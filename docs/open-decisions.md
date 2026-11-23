@@ -4,8 +4,8 @@ Status 22 November 2026. Tidak ada keputusan produk baru yang dianggap disetujui
 | ID | Keputusan / owner | Batas waktu | Perlakuan sementara |
 |---|---|---|---|
 | OD-01 | Metode login anak — PM + Security | Dipilih PM pada Phase 1 | Sesi anak dibuka guru/wali; token sesi singkat, relasi/consent/entitlement dicek server. Implementasi belum lolos uji integrasi. |
-| OD-02 | KC/item/error/remediation + rubrik — ahli | Engine/review konten | Fixtures NEEDS_REVIEW, mapping tidak dianggap valid |
-| OD-03 | Priors BKT dan hint — AI/ML + ahli | Engine release | Config versioned; hint dikecualikan; synthetic reference cases |
+| OD-02 | KC/item/error/remediation + rubrik — ahli | Engine/review konten | Engine dan fixtures sintetis tersedia; seluruh mapping/rubrik tetap NEEDS_REVIEW hingga disahkan ahli |
+| OD-03 | Priors BKT dan hint — AI/ML + ahli | Engine release | Config v1 sintetis dan reference tests tersedia; hint sementara dikecualikan; priors/aturan tetap perlu pengesahan ahli |
 | OD-04 | Add-on/prorata — PM + Finance | Live billing | Request manual, tidak menetapkan Rp200 ribu sebagai harga final |
 | OD-05 | Overlap Home/School — PM + Finance/legal | Live billing | Reconciliation case; tidak auto refund atau charge ganda |
 | OD-06 | Gateway/metode/fees — PM + Engineering | Integrasi Phase 6 | Adapter mock lokal |
