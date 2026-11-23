@@ -7,7 +7,7 @@ if(!url||!anon||!service||!["127.0.0.1","localhost"].includes(new URL(url).hostn
 const password="Synthetic-only-"+Date.now()+"-Pass!";
 execFileSync(process.execPath,["scripts/seed-users.mjs"],{env:{...process.env,SUPABASE_URL:url,SUPABASE_SERVICE_ROLE_KEY:service,NUMERIQ_DEMO_PASSWORD:password},stdio:"pipe"});
 async function request(path,token=anon,body,method){const r=await fetch(url+path,{method:method||(body===undefined?"GET":"POST"),headers:{apikey:anon,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body)});const text=await r.text();return {ok:r.ok,status:r.status,data:text?JSON.parse(text):null};}
-async function login(email){const r=await request("/auth/v1/token?grant_type=password",anon,{email,password});assert.equal(r.ok,true);return r.data.access_token;}
+async function login(email){const r=await request("/auth/v1/token?grant_type=password",anon,{email,password});assert.equal(r.ok,true,"Synthetic login failed: HTTP "+r.status+" / "+(r.data?.error_code||r.data?.error||"unknown"));return r.data.access_token;}
 const teacher=await login("guru@numeriq.test"),other=await login("guru-b@numeriq.test"),parent=await login("wali@numeriq.test"),admin=await login("admin@numeriq.test");
 const nara="20000000-0000-4000-8000-000000000001",bima="20000000-0000-4000-8000-000000000002",rani="20000000-0000-4000-8000-000000000003";
 const rpc=(name,token,args={})=>request("/rest/v1/rpc/"+name,token,args);
