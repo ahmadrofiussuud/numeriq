@@ -1,0 +1,11 @@
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import {parseSubmission,isUuid} from "../src/domain/assessment.ts";
+const valid={responseId:"30000000-0000-4000-8000-000000000001",itemId:"DEMO-01",version:1,answer:"a"};
+test("valid submission carries only original answer",()=>assert.deepEqual(parseSubmission(valid),valid));
+test("client cannot submit correctness or an error label",()=>{assert.throws(()=>parseSubmission({...valid,correct:true}));assert.throws(()=>parseSubmission({...valid,error_code:"x"}));});
+test("client cannot forge hint usage",()=>assert.throws(()=>parseSubmission({...valid,hint_used:false})));
+test("response key must be UUID",()=>assert.throws(()=>parseSubmission({...valid,responseId:"x"})));
+test("version must be positive integer",()=>{for(const version of [0,-1,1.5,"1",null])assert.throws(()=>parseSubmission({...valid,version}));});
+test("malformed/oversized payload rejected",()=>{for(const v of [null,[],{}, {...valid,answer:"x".repeat(101)},{...valid,itemId:""}])assert.throws(()=>parseSubmission(v));});
+test("session route rejects malformed IDs",()=>{assert.equal(isUuid(valid.responseId),true);assert.equal(isUuid("../other"),false);});

@@ -25,5 +25,10 @@ await check("session is bound to initiating adult",async()=>{assert.equal((await
 await check("withdrawal revokes existing session",async()=>{assert.equal((await rpc("record_consent",parent,{p_student:nara,p_status:"withdrawn"})).ok,true);assert.equal((await rpc("read_child_session",teacher,{p_token:session})).ok,false);});
 await check("cannot write learner or entitlement directly",async()=>{assert.equal((await request("/rest/v1/students?id=eq."+nara,teacher,{display_name:"tampered"},"PATCH")).ok,false);assert.equal((await request("/rest/v1/entitlements",parent,{student_id:nara,source:"home",starts_at:new Date().toISOString(),ends_at:new Date(Date.now()+99999).toISOString()})).ok,false);});
 await check("private scoring inaccessible",async()=>assert.equal((await request("/rest/v1/item_scoring_versions?select=*",teacher)).ok,false));
+const {runAssessmentChecks}=await import("./test-assessments.mjs");
+await runAssessmentChecks({rpc,request,check,parent,teacher,other,admin,service,nara,rani});
 console.log(count+" integration checks passed; local synthetic database only.");
+if(process.env.RUN_AUTH_BROWSER==="1"){
+ execFileSync(npx,["playwright","test","--config","playwright.auth.config.ts"],{env:{...process.env,SUPABASE_URL:url,SUPABASE_ANON_KEY:anon,APP_ORIGIN:"http://127.0.0.1:3000",NUMERIQ_DEMO_PASSWORD:password},stdio:"inherit"});
+}
 

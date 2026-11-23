@@ -1,5 +1,9 @@
 name: Verify Numeriq
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -33,7 +37,11 @@ jobs:
       - run: npm install --no-save supabase
       - run: npx supabase start
       - run: npx supabase db reset
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
       - run: node scripts/test-integration.mjs
+        env:
+          RUN_AUTH_BROWSER: '1'
       - run: npx supabase stop
         if: always()
 
