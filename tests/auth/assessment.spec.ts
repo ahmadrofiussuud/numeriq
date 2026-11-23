@@ -47,6 +47,9 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  await page.getByRole("button",{name:"Simpan dan lanjut"}).click();
  await expect(page.getByRole("heading",{name:"Terima kasih sudah mencoba!"})).toBeVisible();
  console.log("Before adult route", (await page.context().cookies()).map(c=>({name:c.name,expires:c.expires}))); 
+ const teacherProbe=await page.request.get("/teacher/assessments",{maxRedirects:0});
+ const studentProbe=await page.request.get("/student",{maxRedirects:0});
+ console.log("Probe",teacherProbe.status(),teacherProbe.headers()["location"],studentProbe.status(),studentProbe.headers()["location"]);
  await page.evaluate(()=>window.location.assign("/teacher/assessments"));
  console.log("After adult route", (await page.context().cookies()).map(c=>({name:c.name,expires:c.expires})));
  await expect(page).toHaveURL(/\/student$/);
