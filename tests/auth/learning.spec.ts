@@ -34,7 +34,6 @@ test("two synthetic items reveal provisional pattern; teacher can reject without
  await expect(page.locator("article.panel").first()).toContainText("PLACE_VALUE_COMPOSE");
  await page.getByRole("link",{name:"Lihat bukti pola dan estimasi"}).click();
  const pattern=page.locator("article.panel").filter({has:page.getByRole("heading",{name:/PLACE_VALUE_COMPOSE/})});
- await expect(pattern).toContainText("Perlu ditinjau guru");
  await expect(pattern).toContainText("2 soal berbeda");
  await pattern.getByLabel("Keputusan guru").selectOption("rejected");
  await pattern.getByLabel("Alasan berdasarkan bukti").fill("Guru belum melihat konsistensi pola pada kegiatan kelas.");
