@@ -11,6 +11,8 @@ test("school admin sees scoped seats; parent opens school-funded home module and
 }) => {
   await login(page, "admin@numeriq.test");
   await expect(page).toHaveURL(/\/school$/);
+  await expect(page.getByRole("heading", { name: "Plan sekolah" })).toBeVisible();
+  await expect(page.getByText(/Verifikasi manual/)).toBeVisible();
   await page.goto("/school/people");
   await expect(
     page.getByRole("heading", { name: "Orang dan kursi" }),
@@ -19,6 +21,8 @@ test("school admin sees scoped seats; parent opens school-funded home module and
   await page.getByRole("button", { name: /Keluar dari akun/ }).click();
   await login(page, "wali@numeriq.test");
   await expect(page).toHaveURL(/\/parent$/);
+  await expect(page.getByRole("heading", { name: "Home Plan sandbox" })).toBeVisible();
+  await expect(page.getByText(/Checkout tambahan diblokir/)).toBeVisible();
   const child = page
     .locator("article.child-card")
     .filter({ hasText: "Nara Demo" });

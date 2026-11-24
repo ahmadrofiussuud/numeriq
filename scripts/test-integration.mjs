@@ -8,7 +8,7 @@ const password="Synthetic-only-"+Date.now()+"-Pass!";
 execFileSync(process.execPath,["scripts/seed-users.mjs"],{env:{...process.env,SUPABASE_URL:url,SUPABASE_SERVICE_ROLE_KEY:service,NUMERIQ_DEMO_PASSWORD:password},stdio:"pipe"});
 async function request(path,token=anon,body,method){const r=await fetch(url+path,{method:method||(body===undefined?"GET":"POST"),headers:{apikey:anon,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body)});const text=await r.text();return {ok:r.ok,status:r.status,data:text?JSON.parse(text):null};}
 async function login(email){const r=await request("/auth/v1/token?grant_type=password",anon,{email,password});assert.equal(r.ok,true,"Synthetic login failed: HTTP "+r.status+" / "+(r.data?.error_code||r.data?.error||"unknown"));return r.data.access_token;}
-const teacher=await login("guru@numeriq.test"),other=await login("guru-b@numeriq.test"),parent=await login("wali@numeriq.test"),admin=await login("admin@numeriq.test");
+const teacher=await login("guru@numeriq.test"),other=await login("guru-b@numeriq.test"),parent=await login("wali@numeriq.test"),admin=await login("admin@numeriq.test"),operator=await login("operator@numeriq.test");
 const nara="20000000-0000-4000-8000-000000000001",bima="20000000-0000-4000-8000-000000000002",rani="20000000-0000-4000-8000-000000000003";
 const rpc=(name,token,args={})=>request("/rest/v1/rpc/"+name,token,args);
 let count=0;async function check(name,fn){await fn();console.log("PASS",name);count++;}
@@ -31,6 +31,8 @@ const {runLearningChecks}=await import("./test-learning.mjs");
 await runLearningChecks({rpc,request,check,parent,teacher,other,admin,service,nara,rani});
 const {runRoleFlowChecks}=await import("./test-role-flows.mjs");
 await runRoleFlowChecks({rpc,request,check,parent,teacher,other,admin,service,nara,rani});
+const {runBillingChecks}=await import("./test-billing.mjs");
+await runBillingChecks({rpc,request,check,parent,teacher,admin,operator,service,nara});
 console.log(count+" integration checks passed; local synthetic database only.");
 if(process.env.RUN_AUTH_BROWSER==="1"){
  execFileSync(npx,["playwright","test","--config","playwright.auth.config.ts"],{env:{...process.env,SUPABASE_URL:url,SUPABASE_ANON_KEY:anon,APP_ORIGIN:"http://127.0.0.1:3000",NUMERIQ_DEMO_PASSWORD:password},stdio:"inherit"});
