@@ -7,7 +7,7 @@ test("teacher assigns; supervised learner submits, resumes and completes; teache
  await expect(page).toHaveURL(/\/teacher$/);
  await page.getByRole("link",{name:"Asesmen",exact:false}).click();
  const panel=page.locator("article.panel").filter({has:page.getByRole("heading",{name:"Nara Demo"})});
- await panel.getByRole("button",{name:"Tugaskan paket demo"}).click();
+ await panel.getByRole("button",{name:"Tugaskan asesmen"}).click();
  await expect(page).toHaveURL(/\/teacher\/assessments\?assigned=/);
  const sessionId=new URL(page.url()).searchParams.get("assigned");expect(sessionId).toMatch(/^[a-f0-9-]{36}$/);
  const reportPath="/teacher/assessments/"+sessionId;

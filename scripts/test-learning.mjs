@@ -61,9 +61,9 @@ export async function runLearningChecks({rpc,request,check,parent,teacher,other,
  assert.deepEqual((await probe()).timeline.filter(r=>r.kc_id==="tens_ones_probe").map(r=>r.model_version),[1,1]);
  });
  await check("P4 draft or unreviewed remediation never becomes suggestion",async()=>{
- const module=await request("/rest/v1/module_versions",service,{module_id:"PV-01",version:1,domain:"Place Value",title:"Latihan nilai tempat draft",status:"draft",review_status:"NEEDS_REVIEW",public_content:{}});
+ const module=await request("/rest/v1/module_versions",service,{module_id:"PV-01",version:2,domain:"Place Value",title:"Latihan nilai tempat draft",status:"draft",review_status:"NEEDS_REVIEW",public_content:{}});
  assert.equal(module.ok,true,JSON.stringify(module.data));
- assert.equal((await request("/rest/v1/remediation_mappings",service,{kc_id:"tens_ones_probe",error_code:"PLACE_VALUE_COMPOSE",module_id:"PV-01",module_version:1,review_status:"NEEDS_REVIEW"})).ok,true);
+ assert.equal((await request("/rest/v1/remediation_mappings",service,{kc_id:"tens_ones_probe",error_code:"PLACE_VALUE_COMPOSE",module_id:"PV-01",module_version:2,review_status:"NEEDS_REVIEW"})).ok,true);
  assert.equal((await pattern()).activity,null);
  });
  const second=(await rpc("assign_assessment",teacher,assign())).data,otherBase={p_session:second,p_token:token};

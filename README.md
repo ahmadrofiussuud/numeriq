@@ -65,3 +65,9 @@ Paket `pattern-demo` menyediakan bukti sintetis untuk menguji ambang minimal dua
 Verifikasi aktual pada 23 November 2026: 39 unit/reference-math tests, 9 browser activity tests, typecheck, production build, 52 integration/RLS checks, dan 2 authenticated browser journeys lulus pada [GitHub Actions run 45185668733](https://github.com/ahmadrofiussuud/numeriq/actions/runs/45185668733). Detail sumber, batas keamanan, dan hasil pengujian tersedia di [docs/phase-4-status.md](docs/phase-4-status.md).
 
 Phase 4 berhenti pada engine dan alur review sintetis. Sebelum pilot nyata, ahli perlu mengesahkan taxonomy/remediation, priors BKT, aturan hint, serta kebijakan evidence window; legal/privacy juga perlu menyetujui consent dan retensi.
+
+## Phase 5 — empat role end-to-end
+
+Branch `codex/phase-5-four-role-flows` dan draft PR #4 menghubungkan School Admin, Teacher, Student, dan Parent ke backend yang sama. Admin dapat mengelola kursi dan assignment guru dalam tenant; guru dapat menugaskan asesmen/modul dan memantau progres; anak dapat menyelesaikan salah satu dari 12 modul; wali dapat melihat progres dan membuka akses rumah dari lisensi sekolah tanpa checkout baru.
+
+Semua konten masih sintetis/`NEEDS_REVIEW`. Request kapasitas hanya dicatat sebagai `pending`; billing, invoice, pembayaran, dan approval operasional baru masuk Phase 6. Hasil dan batas pengujian dicatat di [docs/phase-5-status.md](docs/phase-5-status.md).
