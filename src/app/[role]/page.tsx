@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireRole, rpc } from "../../server/supabase";
 import { Shell } from "../../components/shell";
-import { recordConsent, claimInvite, startChild, createHomeCheckout, cancelHomeSubscription } from "../actions";
+import { recordConsent, claimInvite, startChild, createHomeCheckout, cancelHomeSubscription, requestChildDataAction } from "../actions";
 type ChildView = {
   id: string;
   display_name: string;
@@ -38,6 +38,7 @@ export default async function Dashboard({
   const teacherOverview =
     role === "teacher" ? await rpc("teacher_overview", user.token) : null;
   const billing = role === "parent" ? await rpc("home_billing_summary",user.token) : role === "school" ? await rpc("school_billing_summary",user.token) : null;
+  const privacyRequests = role === "parent" ? await rpc("list_my_data_requests",user.token) : [];
   return (
     <Shell role={role} name={user.display_name}>
       <section className="page-heading">
@@ -97,6 +98,9 @@ export default async function Dashboard({
       {query.checkout_pending&&<div role="status" className="notice">Checkout sandbox dibuat. Akses belum aktif sampai webhook terverifikasi.</div>}
       {query.billing_error&&<div role="alert" className="notice danger">Permintaan billing ditolak atau checkout aktif sudah tersedia.</div>}
       {query.billing_cancelled&&<div role="status" className="notice">Perpanjangan dibatalkan. Akses berbayar tetap berlaku sampai akhir periode.</div>}
+      {query.privacy_requested&&<div role="status" className="notice">Permintaan privasi tercatat dan menunggu penanganan manual.</div>}
+      {query.privacy_error&&<div role="alert" className="notice danger">Permintaan privasi ditolak atau permintaan serupa masih terbuka.</div>}
+      {(role==="teacher"||role==="parent")&&<div className="notice"><strong>NUMERIQ bukan alat diagnosis.</strong><p>Estimasi penguasaan dan pola respons membantu menentukan langkah belajar; keputusan pendampingan tetap ditinjau orang dewasa.</p></div>}
       {teacherOverview && (
         <div className="stats">
           <article>
@@ -269,6 +273,7 @@ export default async function Dashboard({
       </section>
       {role==="school"&&<section><div className="section-heading"><h2>Plan sekolah</h2><span className="pill">Verifikasi manual</span></div><article className="panel"><h3>{billing.contract?.plan?.replaceAll("_"," ")||"Belum ada kontrak"}</h3><p>Status: <strong>{billing.contract?.status||"belum aktif"}</strong>. Harga dan kapasitas demo adalah hipotesis, bukan penawaran final.</p><p>{billing.requests.length} permintaan perubahan kapasitas tercatat; aktivasi hanya oleh operator internal dan diaudit.</p></article></section>}
       {role==="parent"&&<section><div className="section-heading"><h2>Home Plan sandbox</h2><span className="pill">Tanpa uang nyata</span></div><div className="child-grid">{children.map(child=><article className="panel" key={"billing-"+child.id}><h3>{child.display_name}</h3>{child.access==="school"?<p>Sudah termasuk lisensi sekolah. Checkout tambahan diblokir.</p>:<><p>Harga hipotesis Rp69.000/bulan atau Rp690.000/tahun. Provider lokal tidak memproses uang nyata.</p><form action={createHomeCheckout}><input type="hidden" name="student" value={child.id}/><input type="hidden" name="orderKey" value={crypto.randomUUID()}/><label htmlFor={"plan-"+child.id}>Periode</label><select id={"plan-"+child.id} name="plan"><option value="home_monthly">Bulanan</option><option value="home_annual">Tahunan</option></select><button disabled={!child.consent}>Buat checkout sandbox</button></form></>}{billing.filter((o:{student_id:string})=>o.student_id===child.id).map((o:{id:string;status:string;plan:string;auto_renew:boolean})=><div key={o.id}><p>{o.plan.replaceAll("_"," ")} · {o.status}</p>{o.auto_renew&&["pending","paid"].includes(o.status)&&<form action={cancelHomeSubscription}><input type="hidden" name="order" value={o.id}/><button className="quiet">Batalkan perpanjangan</button></form>}</div>)}</article>)}</div></section>}
+      {role==="parent"&&<section id="privacy"><div className="section-heading"><h2>Privasi dan data anak</h2><span className="pill">Ditangani manual</span></div><div className="child-grid">{children.map(child=><article className="panel" key={"privacy-"+child.id}><h3>{child.display_name}</h3><p>Ajukan salinan atau penghapusan data. Penghapusan tidak otomatis agar kewajiban retensi dan audit ditinjau petugas.</p><form action={requestChildDataAction}><input type="hidden" name="student" value={child.id}/><label htmlFor={"privacy-type-"+child.id}>Jenis permintaan</label><select id={"privacy-type-"+child.id} name="type"><option value="export">Ekspor data</option><option value="delete">Penghapusan data</option></select><label htmlFor={"privacy-note-"+child.id}>Catatan opsional</label><textarea id={"privacy-note-"+child.id} name="note" maxLength={500}/><button>Catat permintaan</button></form>{privacyRequests.filter((r:{student_id:string})=>r.student_id===child.id).map((r:{id:string;type:string;status:string})=><p key={r.id}>{r.type} · <strong>{r.status}</strong></p>)}</article>)}</div></section>}
     </Shell>
   );
 }
