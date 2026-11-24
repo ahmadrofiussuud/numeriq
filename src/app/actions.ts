@@ -93,3 +93,39 @@ export async function reviewEvidence(form:FormData){
  catch{redirect("/teacher/insights/"+student+"?error=1");}
  redirect("/teacher/insights/"+student+"?updated=1");
 }
+
+export async function setSchoolSeat(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();if(!current||current.role!=="school")redirect("/forbidden");
+ const student=String(form.get("student")||""),key=String(form.get("eventKey")||""),active=String(form.get("active"))==="true";
+ if(!isUuid(student)||!isUuid(key))redirect("/school/people?error=seat");
+ try{await rpc("school_set_seat",current.token,{p_student:student,p_active:active,p_key:key});}catch{redirect("/school/people?error=seat");}
+ redirect("/school/people?updated=seat");
+}
+export async function assignTeacher(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();if(!current||current.role!=="school")redirect("/forbidden");
+ const student=String(form.get("student")||""),teacher=String(form.get("teacher")||""),assigned=String(form.get("assigned"))==="true";
+ if(!isUuid(student)||!isUuid(teacher))redirect("/school/people?error=teacher");
+ try{await rpc("school_assign_teacher",current.token,{p_student:student,p_teacher:teacher,p_assigned:assigned});}catch{redirect("/school/people?error=teacher");}
+ redirect("/school/people?updated=teacher");
+}
+export async function requestSeatChange(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();if(!current||current.role!=="school")redirect("/forbidden");
+ const capacity=Number(form.get("capacity")),reason=String(form.get("reason")||"").trim();
+ if(!Number.isSafeInteger(capacity)||capacity<1||reason.length<10||reason.length>500)redirect("/school/people?error=request");
+ try{await rpc("request_seat_change",current.token,{p_capacity:capacity,p_reason:reason});}catch{redirect("/school/people?error=request");}
+ redirect("/school/people?updated=request");
+}
+export async function assignLearningActivity(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();if(!current||current.role!=="teacher")redirect("/forbidden");
+ const student=String(form.get("student")||""),module=String(form.get("module")||""),key=String(form.get("assignmentKey")||"");
+ if(!isUuid(student)||!isUuid(key)||!/^(NS|PV|AR)-0[1-4]$/.test(module))redirect("/teacher/assessments?error=1");
+ try{await rpc("assign_activity",current.token,{p_student:student,p_module:module,p_version:1,p_key:key});}catch{redirect("/teacher/assessments?error=1");}
+ redirect("/teacher/insights/"+student+"?assigned=1");
+}
+export async function completeLearningModule(form:FormData){
+ await checkOrigin();const current=await actor();if(!current)redirect("/login");
+ const jar=await cookies(),token=jar.get("numeriq_child")?.value,module=String(form.get("module")||""),key=String(form.get("completionKey")||"");
+ if(!token||!isUuid(key)||!/^(NS|PV|AR)-0[1-4]$/.test(module))redirect("/student?module_error=1");
+ try{await rpc("complete_module",current.token,{p_token:token,p_module:module,p_version:1,p_key:key});}catch{redirect("/student?module_error=1");}
+ redirect("/student?completed="+module);
+}
