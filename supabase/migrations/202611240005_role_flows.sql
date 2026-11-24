@@ -45,7 +45,7 @@ begin
  if student_tenant is distinct from tenant then raise exception 'Forbidden';end if;
  select * into prior from seat_events where event_key=p_key;
  if prior.event_key is not null then
-  if prior.institution_id<>tenant or prior.student_id<>p_student or prior.actor<>auth.uid() or prior.action<>case when p_active then 'activate' else 'deactivate' end then raise exception 'Idempotency conflict';end if;
+  if prior.institution_id<>tenant or prior.student_id<>p_student or prior.actor<>auth.uid() or prior.action<>(case when p_active then 'activate' else 'deactivate' end) then raise exception 'Idempotency conflict';end if;
   return;
  end if;
  if p_active and access_source(p_student) is distinct from 'school' then
