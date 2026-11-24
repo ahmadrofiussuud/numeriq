@@ -129,3 +129,15 @@ export async function completeLearningModule(form:FormData){
  try{await rpc("complete_module",current.token,{p_token:token,p_module:module,p_version:1,p_key:key});}catch{redirect("/student?module_error=1");}
  redirect("/student?completed="+module);
 }
+export async function createHomeCheckout(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();if(!current||current.role!=="parent")redirect("/forbidden");
+ const student=String(form.get("student")||""),plan=String(form.get("plan")||""),order=String(form.get("orderKey")||"");
+ if(!isUuid(student)||!isUuid(order)||!["home_monthly","home_annual"].includes(plan))redirect("/parent?billing_error=1");
+ try{const result=await rpc("create_home_checkout",current.token,{p_student:student,p_plan:plan,p_order:order});if(result.status==="school_included")redirect("/parent?school_included=1");}
+ catch{redirect("/parent?billing_error=1");}redirect("/parent?checkout_pending=1");
+}
+export async function cancelHomeSubscription(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();if(!current||current.role!=="parent")redirect("/forbidden");
+ const order=String(form.get("order")||"");if(!isUuid(order))redirect("/parent?billing_error=1");
+ try{await rpc("cancel_home_subscription",current.token,{p_order:order});}catch{redirect("/parent?billing_error=1");}redirect("/parent?billing_cancelled=1");
+}

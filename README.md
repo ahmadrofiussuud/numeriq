@@ -71,3 +71,7 @@ Phase 4 berhenti pada engine dan alur review sintetis. Sebelum pilot nyata, ahli
 Branch `codex/phase-5-four-role-flows` dan draft PR #4 menghubungkan School Admin, Teacher, Student, dan Parent ke backend yang sama. Admin dapat mengelola kursi dan assignment guru dalam tenant; guru dapat menugaskan asesmen/modul dan memantau progres; anak dapat menyelesaikan salah satu dari 12 modul; wali dapat melihat progres dan membuka akses rumah dari lisensi sekolah tanpa checkout baru.
 
 Semua konten masih sintetis/`NEEDS_REVIEW`. Request kapasitas hanya dicatat sebagai `pending`; billing, invoice, pembayaran, dan approval operasional baru masuk Phase 6. Hasil dan batas pengujian dicatat di [docs/phase-5-status.md](docs/phase-5-status.md).
+
+## Phase 6 - billing sandbox
+
+Branch `codex/phase-6-sandbox-billing` menambahkan plan sekolah dengan verifikasi manual, checkout Home bulanan/tahunan, webhook HMAC lokal, idempotensi pembayaran, cancellation/expiry, dan reconciliation tanpa double entitlement. Tidak ada payment live atau deployment. Detail tersedia di [docs/phase-6-status.md](docs/phase-6-status.md).

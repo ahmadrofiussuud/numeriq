@@ -10,7 +10,7 @@ async function send(path,body){const res=await fetch(url+path,{method:"POST",hea
 const a="10000000-0000-4000-8000-000000000001", b="10000000-0000-4000-8000-000000000002";
 const nara="20000000-0000-4000-8000-000000000001", bima="20000000-0000-4000-8000-000000000002", rani="20000000-0000-4000-8000-000000000003";
 for(const [email,name,role,institution] of [
- ["admin@numeriq.test","Dina Demo","school",a],["guru@numeriq.test","Raka Demo","teacher",a],["wali@numeriq.test","Sari Demo","parent",null],["guru-b@numeriq.test","Tia Demo","teacher",b]
+ ["admin@numeriq.test","Dina Demo","school",a],["guru@numeriq.test","Raka Demo","teacher",a],["wali@numeriq.test","Sari Demo","parent",null],["guru-b@numeriq.test","Tia Demo","teacher",b],["operator@numeriq.test","Opi Demo","operator",null]
 ]){
  const user=await send("/auth/v1/admin/users",{email,password,email_confirm:true});
  await send("/rest/v1/profiles",{id:user.id,display_name:name,role,institution_id:institution});
