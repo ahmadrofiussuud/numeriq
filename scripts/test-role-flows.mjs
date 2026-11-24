@@ -1,0 +1,30 @@
+import assert from "node:assert/strict";
+export async function runRoleFlowChecks({rpc,request,check,parent,teacher,other,admin,service,nara,rani}){
+ const bima="20000000-0000-4000-8000-000000000002";
+ const institution="10000000-0000-4000-8000-000000000001";
+ const people=await rpc("school_people",admin);
+ await check("school admin sees tenant people and seat aggregate",async()=>{assert.equal(people.ok,true);assert.equal(people.data.students.length,2);assert.equal(people.data.teachers.length,1);});
+ await check("teacher and parent cannot use school people endpoint",async()=>{assert.equal((await rpc("school_people",teacher)).ok,false);assert.equal((await rpc("school_people",parent)).ok,false);});
+ await check("school admin cannot assign cross-tenant teacher",async()=>{const otherUsers=await request("/rest/v1/profiles?role=eq.teacher&institution_id=eq.10000000-0000-4000-8000-000000000002&select=id",service);assert.equal(otherUsers.ok,true);assert.equal((await rpc("school_assign_teacher",admin,{p_student:nara,p_teacher:otherUsers.data[0].id,p_assigned:true})).ok,false);});
+ const deactivateKey=crypto.randomUUID(),activateKey=crypto.randomUUID();
+ await check("seat changes are server-side and idempotent",async()=>{assert.equal((await rpc("school_set_seat",admin,{p_student:nara,p_active:false,p_key:deactivateKey})).ok,true);assert.equal((await rpc("school_set_seat",admin,{p_student:nara,p_active:true,p_key:activateKey})).ok,true);assert.equal((await rpc("school_set_seat",admin,{p_student:nara,p_active:true,p_key:activateKey})).ok,true);});
+ await check("seat event key rejects a different payload",async()=>assert.equal((await rpc("school_set_seat",admin,{p_student:bima,p_active:true,p_key:activateKey})).ok,false));
+ await request("/rest/v1/institutions?id=eq."+institution,service,{capacity:1},"PATCH");
+ await rpc("school_set_seat",admin,{p_student:bima,p_active:false,p_key:crypto.randomUUID()});
+ await check("quota rejects activation beyond locked capacity",async()=>assert.equal((await rpc("school_set_seat",admin,{p_student:bima,p_active:true,p_key:crypto.randomUUID()})).ok,false));
+ await request("/rest/v1/institutions?id=eq."+institution,service,{capacity:20},"PATCH");
+ await rpc("school_set_seat",admin,{p_student:bima,p_active:true,p_key:crypto.randomUUID()});
+ const teacherRows=await request("/rest/v1/profiles?role=eq.teacher&institution_id=eq."+institution+"&select=id",service);const teacherId=teacherRows.data[0].id;
+ await check("admin assignment immediately changes teacher scope",async()=>{assert.equal((await rpc("school_assign_teacher",admin,{p_student:nara,p_teacher:teacherId,p_assigned:false})).ok,true);assert.equal((await rpc("child_progress",teacher,{p_student:nara})).ok,false);assert.equal((await rpc("school_assign_teacher",admin,{p_student:nara,p_teacher:teacherId,p_assigned:true})).ok,true);});
+ await rpc("record_consent",parent,{p_student:nara,p_status:"granted"});
+ await check("teacher assigns one of twelve versioned draft modules",async()=>{const r=await rpc("assign_activity",teacher,{p_student:nara,p_module:"NS-01",p_version:1,p_key:crypto.randomUUID()});assert.equal(r.ok,true);});
+ const childToken=(await rpc("start_child_session",parent,{p_student:nara})).data;
+ const learning=await rpc("list_child_learning",parent,{p_token:childToken});
+ await check("school-funded child gets all twelve home modules",async()=>{assert.equal(learning.ok,true);assert.equal(learning.data.access_source,"school");assert.equal(learning.data.modules.length,12);assert.equal(learning.data.modules.find(x=>x.id==="NS-01").assigned,true);});
+ const completionKey=crypto.randomUUID();
+ await check("module completion persists exactly once",async()=>{const first=await rpc("complete_module",parent,{p_token:childToken,p_module:"NS-01",p_version:1,p_key:completionKey});const duplicate=await rpc("complete_module",parent,{p_token:childToken,p_module:"NS-01",p_version:1,p_key:completionKey});assert.equal(first.ok,true);assert.equal(duplicate.ok,true);assert.equal(first.data,duplicate.data);});
+ await check("parent and assigned teacher see progress without raw answer exposure",async()=>{const p=await rpc("child_progress",parent,{p_student:nara});const t=await rpc("child_progress",teacher,{p_student:nara});assert.equal(p.data.completed,1);assert.equal(t.data.completed,1);assert.equal(JSON.stringify(p.data).includes("answer"),false);});
+ await check("cross-tenant progress and private tables remain denied",async()=>{assert.equal((await rpc("child_progress",other,{p_student:nara})).ok,false);assert.equal((await request("/rest/v1/module_progress?select=*",parent)).ok,false);assert.equal((await request("/rest/v1/activity_assignments?select=*",teacher)).ok,false);});
+ await check("teacher overview is assignment-scoped",async()=>{const r=await rpc("teacher_overview",teacher);assert.equal(r.ok,true);assert.equal(r.data.students,2);assert.ok(r.data.completed_modules>=1);});
+ await check("consent withdrawal blocks module learning immediately",async()=>{await rpc("record_consent",parent,{p_student:nara,p_status:"withdrawn"});assert.equal((await rpc("list_child_learning",parent,{p_token:childToken})).ok,false);});
+}

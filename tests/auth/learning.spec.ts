@@ -6,10 +6,10 @@ test("two synthetic items reveal provisional pattern; teacher can reject without
  await page.getByRole("button",{name:"Masuk",exact:false}).click();
  await expect(page).toHaveURL(/\/teacher$/);
  await page.goto("/teacher/assessments");
- await expect(page.getByRole("heading",{name:"Asesmen numerasi"})).toBeVisible();
+ await expect(page.getByRole("heading",{name:"Asesmen dan progres"})).toBeVisible();
  const panel=page.locator("article.panel").filter({has:page.getByRole("heading",{name:"Nara Demo"})});
  await panel.getByLabel("Paket sintetis").selectOption("pattern-demo");
- await panel.getByRole("button",{name:"Tugaskan paket demo"}).click();
+ await panel.getByRole("button",{name:"Tugaskan asesmen"}).click();
  await expect(page).toHaveURL(/\/teacher\/assessments\?assigned=/);
  const sessionId=new URL(page.url()).searchParams.get("assigned");expect(sessionId).toMatch(/^[a-f0-9-]{36}$/);
  const reportPath="/teacher/assessments/"+sessionId;
