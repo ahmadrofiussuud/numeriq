@@ -1,5 +1,9 @@
 # Traceability PRD → proyek
 
+## Pembaruan Phase 5
+
+Draft PR #4 mengintegrasikan empat role dengan backend nyata untuk scope sintetis. SA-01/04/05, TC-01/02/05/06/07, ST-01/02/03/04/05/07, PR-04/05, BR-05/16/17/18/19/20/24, serta AT-01/02/05/11/18 telah memiliki bukti implementasi dan integration/browser checks pada CI #45316332893. SA-02/03 belum lengkap; SA-06 baru request `pending`; TC-08 hanya assignment modul draft sintetis dan belum memenuhi gate approved remediation; billing/contract tetap Phase 6. Semua status masih memerlukan pilot hardening Phase 7.
+
 ## Pembaruan Phase 2
 Tabel audit awal di bawah adalah baseline Phase 0, bukan status implementasi terbaru. Detail implementasi, batas scope, path dan bukti tes sekarang ada di phase-2-status.md.
 ST-05/06/08, ENG-01, BR-20, NFR-06/07/12: implementasi demo/schema tersedia; persetujuan ahli dan full pilot acceptance belum terpenuhi. PL-01/ST-01: perbaikan reauthentication mode anak tersedia. Tidak ada requirement produk yang dinyatakan fully released hanya dari demo.
