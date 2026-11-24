@@ -75,3 +75,7 @@ Semua konten masih sintetis/`NEEDS_REVIEW`. Request kapasitas hanya dicatat seba
 ## Phase 6 - billing sandbox
 
 Branch `codex/phase-6-sandbox-billing` menambahkan plan sekolah dengan verifikasi manual, checkout Home bulanan/tahunan, webhook HMAC lokal, idempotensi pembayaran, cancellation/expiry, dan reconciliation tanpa double entitlement. Tidak ada payment live atau deployment. Detail tersedia di [docs/phase-6-status.md](docs/phase-6-status.md).
+
+## Phase 7 - pilot hardening
+
+Phase 7 menambah privacy-request ledger, child-safety copy, request ID webhook, accessibility smoke checks, performance smoke, backup/restore draft, content approval checklist, dan audit AT-01..AT-18. Status tetap **BLOCKED**, bukan `READY_FOR_PILOT`, karena approval ahli/legal/security dan usability nyata belum tersedia. Lihat [docs/phase-7-pilot-readiness.md](docs/phase-7-pilot-readiness.md).

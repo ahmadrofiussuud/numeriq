@@ -22,6 +22,8 @@ test("school admin sees scoped seats; parent opens school-funded home module and
   await login(page, "wali@numeriq.test");
   await expect(page).toHaveURL(/\/parent$/);
   await expect(page.getByRole("heading", { name: "Home Plan sandbox" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Privasi dan data anak" })).toBeVisible();
+  await expect(page.getByText(/bukan alat diagnosis/)).toBeVisible();
   await expect(page.getByText(/Checkout tambahan diblokir/)).toBeVisible();
   const child = page
     .locator("article.child-card")

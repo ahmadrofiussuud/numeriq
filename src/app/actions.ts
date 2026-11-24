@@ -141,3 +141,9 @@ export async function cancelHomeSubscription(form:FormData){
  const order=String(form.get("order")||"");if(!isUuid(order))redirect("/parent?billing_error=1");
  try{await rpc("cancel_home_subscription",current.token,{p_order:order});}catch{redirect("/parent?billing_error=1");}redirect("/parent?billing_cancelled=1");
 }
+export async function requestChildDataAction(form:FormData){
+ await checkOrigin();await requireAdultMode();const current=await actor();if(!current||current.role!=="parent")redirect("/forbidden");
+ const student=String(form.get("student")||""),type=String(form.get("type")||""),note=String(form.get("note")||"").trim();
+ if(!isUuid(student)||!["export","delete"].includes(type)||note.length>500)redirect("/parent?privacy_error=1");
+ try{await rpc("request_child_data_action",current.token,{p_student:student,p_type:type,p_note:note});}catch{redirect("/parent?privacy_error=1");}redirect("/parent?privacy_requested=1");
+}

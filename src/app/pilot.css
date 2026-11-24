@@ -1,0 +1,4 @@
+select,textarea{font:inherit;display:block;width:100%;min-height:46px;border:1px solid #9cac9c;background:white;border-radius:8px;padding:10px 12px;color:var(--ink)}
+textarea{min-height:90px;resize:vertical}
+select:focus-visible,textarea:focus-visible{outline:3px solid #9b5600;outline-offset:4px}
+@media(pointer:coarse){button,.button,nav a{min-height:48px}}

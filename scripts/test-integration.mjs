@@ -33,6 +33,8 @@ const {runRoleFlowChecks}=await import("./test-role-flows.mjs");
 await runRoleFlowChecks({rpc,request,check,parent,teacher,other,admin,service,nara,rani});
 const {runBillingChecks}=await import("./test-billing.mjs");
 await runBillingChecks({rpc,request,check,parent,teacher,admin,operator,service,nara});
+const {runPilotHardeningChecks}=await import("./test-pilot-hardening.mjs");
+await runPilotHardeningChecks({rpc,request,check,parent,teacher,service,nara});
 console.log(count+" integration checks passed; local synthetic database only.");
 if(process.env.RUN_AUTH_BROWSER==="1"){
  execFileSync(npx,["playwright","test","--config","playwright.auth.config.ts"],{env:{...process.env,SUPABASE_URL:url,SUPABASE_ANON_KEY:anon,APP_ORIGIN:"http://127.0.0.1:3000",NUMERIQ_DEMO_PASSWORD:password},stdio:"inherit"});
