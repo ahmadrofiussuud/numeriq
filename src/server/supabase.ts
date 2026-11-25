@@ -4,13 +4,13 @@ export function configuration() {
  const url=process.env.SUPABASE_URL, key=process.env.SUPABASE_ANON_KEY;
  if(!url || !key) return null;
  const parsed=new URL(url);
- if(!["127.0.0.1","localhost"].includes(parsed.hostname)) throw new Error("Phase 1 hanya memakai Supabase lokal.");
+ if(!["127.0.0.1","localhost"].includes(parsed.hostname) && !(parsed.protocol==="https:" && parsed.hostname==="mwaipvjzdbypqewzrvfg.supabase.co")) throw new Error("Phase 1 hanya memakai Supabase lokal.");
  return {url,key};
 }
 export async function api(path:string, token?:string, body?:unknown) {
  const config=configuration();
  if(!config) throw new Error("Supabase lokal belum dikonfigurasi.");
- const response=await fetch(config.url+path,{method:body===undefined?"GET":"POST",headers:{apikey:config.key,Authorization:"Bearer "+(token||config.key),"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body),cache:"no-store"});
+ const response=await fetch(config.url+path,{method:body===undefined?"GET":"POST",headers:{apikey:config.key,...(token?{Authorization:"Bearer "+token}:{}),"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body),cache:"no-store"});
  if(!response.ok) throw new Error("Permintaan ditolak. Periksa akses, persetujuan, atau layanan lokal.");
  if(response.status===204) return null;
  const text=await response.text();

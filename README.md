@@ -79,3 +79,8 @@ Branch `codex/phase-6-sandbox-billing` menambahkan plan sekolah dengan verifikas
 ## Phase 7 - pilot hardening
 
 Phase 7 menambah privacy-request ledger, child-safety copy, request ID webhook, accessibility smoke checks, performance smoke, backup/restore draft, content approval checklist, dan audit AT-01..AT-18. Status tetap **BLOCKED**, bukan `READY_FOR_PILOT`, karena approval ahli/legal/security dan usability nyata belum tersedia. Lihat [docs/phase-7-pilot-readiness.md](docs/phase-7-pilot-readiness.md).
+
+
+## Phase 8 - documentation and handoff
+
+Final engineering handoff dimulai di [docs/HANDOFF.md](docs/HANDOFF.md). Paket mencakup setup lokal, ERD/API/schema inventory, akun sintetis, demo script juri, operations runbook, backup plan, content checklist, functional gaps, known bugs, dan release gate. Tidak ada deployment; status pilot tetap **BLOCKED**.
